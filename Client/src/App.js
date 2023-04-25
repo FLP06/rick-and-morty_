@@ -11,7 +11,7 @@ import Form from './components/Form';
 
 const URL_BASE = "https://be-a-rym.up.railway.app/api/character"
 const API_KEY = "f71fb6126dfc.6c5e2dd0e20891515c25"
-const NEW_URL = "http://localhost:3001/rickandmorty/character/"
+const NEW_URL = "http://localhost:3001/rickandmorty/character"
 
 function App() {
    
@@ -24,12 +24,26 @@ function App() {
    
    const password = "Password1"
    
-   const login = (userData) =>{
-      if(userData.email === usuario && userData.password === password){
-         setAccess(true)
-         rutas("/home")
-      }
+   // const login = (userData) =>{
+   //    if(userData.email === usuario && userData.password === password){
+   //       setAccess(true)
+   //       rutas("/home")
+   //    }
+   // }
+
+
+   const login = (userData) => {
+      const { email, password } = userData;
+      const URL = 'http://localhost:3001/rickandmorty/login/';
+      axios(URL + `?email=${email}&password=${password}`).then(({ data }) => {
+         const { access } = data;
+         setAccess(data);
+         access && rutas('/home');
+      });
    }
+
+
+
    useEffect(()=>{
       !access && rutas('/')
 
