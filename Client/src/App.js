@@ -12,6 +12,7 @@ import Form from './components/Form';
 const URL_BASE = "https://be-a-rym.up.railway.app/api/character"
 const API_KEY = "f71fb6126dfc.6c5e2dd0e20891515c25"
 const NEW_URL = "http://localhost:3001/rickandmorty/character"
+const URL = 'http://localhost:3001/rickandmorty/login/';
 
 function App() {
    
@@ -32,14 +33,18 @@ function App() {
    // }
 
 
-   const login = (userData) => {
-      const { email, password } = userData;
-      const URL = 'http://localhost:3001/rickandmorty/login/';
-      axios(URL + `?email=${email}&password=${password}`).then(({ data }) => {
-         const { access } = data;
+   const login = async (userData) => {
+      try {
+         const { email, password } = userData;
+         const {data} = await axios(URL + `?email=${email}&password=${password}`)
+
          setAccess(data);
-         access && rutas('/home');
-      });
+         access && rutas('/home')
+         
+      } catch (error) {
+         console.log(error.message);
+      }
+      
    }
 
 
@@ -49,15 +54,18 @@ function App() {
 
    },[access, rutas])
 
-   function onSearch(id) {
-      //axios(`${URL_BASE}/${id}?key=${API_KEY}`).then(({ data }) => {
-         axios(`${NEW_URL}/${id}`).then(({ data }) => {
+   const onSearch = async (id)=> {
+      try {
+         const {data} = await axios(`${NEW_URL}/${id}`)
          if (data.name) {
             setCharacters((oldChars) => [...oldChars, data]);
-         } else {
-            window.alert('¡No hay personajes con este ID!');
          }
-      });
+         
+      } catch (error) {
+         alert('¡No hay personajes con este ID!')
+      }
+      //axios(`${URL_BASE}/${id}?key=${API_KEY}`).then(({ data }) => {
+         
    }
 
    const onClose = (id) =>{
